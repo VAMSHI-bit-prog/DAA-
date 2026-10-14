@@ -1,0 +1,95 @@
+import time
+from collections import deque
+
+
+# BFS
+def bfs(graph, start):
+    visited = set()
+    queue = deque([start])
+    visited.add(start)
+
+    traversal = []
+
+    while queue:
+        node = queue.popleft()
+        traversal.append(node)
+
+        for neighbor in graph[node]:
+            if neighbor not in visited:
+                visited.add(neighbor)
+                queue.append(neighbor)
+
+    return traversal
+
+
+# DFS
+def dfs(graph, start):
+    visited = set()
+    traversal = []
+
+    def dfs_recursive(node):
+        visited.add(node)
+        traversal.append(node)
+
+        for neighbor in graph[node]:
+            if neighbor not in visited:
+                dfs_recursive(neighbor)
+
+    dfs_recursive(start)
+    return traversal
+
+
+# ---------------- USER INPUT ----------------
+
+n = int(input("Enter number of vertices: "))
+e = int(input("Enter number of edges: "))
+
+graph = {i: [] for i in range(n)}
+
+print("Enter edges (u v):")
+
+for _ in range(e):
+    u, v = map(int, input().split())
+
+    # Undirected graph
+    graph[u].append(v)
+    graph[v].append(u)
+
+start = int(input("Enter starting vertex: "))
+
+
+# ---------------- BFS ----------------
+
+start_time = time.perf_counter_ns()
+
+bfs_result = bfs(graph, start)
+
+end_time = time.perf_counter_ns()
+
+bfs_time = end_time - start_time
+
+print("\nBFS Traversal:", bfs_result)
+print("BFS Execution Time:", bfs_time, "nanoseconds")
+
+
+# ---------------- DFS ----------------
+
+start_time = time.perf_counter_ns()
+
+dfs_result = dfs(graph, start)
+
+end_time = time.perf_counter_ns()
+
+dfs_time = end_time - start_time
+
+print("\nDFS Traversal:", dfs_result)
+print("DFS Execution Time:", dfs_time, "nanoseconds")
+
+
+# ---------------- COMPLEXITY ----------------
+
+print("\nComplexity:")
+print("BFS Time Complexity: O(V + E)")
+print("BFS Space Complexity: O(V)")
+print("DFS Time Complexity: O(V + E)")
+print("DFS Space Complexity: O(V)")
